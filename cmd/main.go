@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/JackDaniells/pack-service/api"
 	"github.com/JackDaniells/pack-service/domain/handlers"
+	"github.com/JackDaniells/pack-service/domain/repository"
 	"github.com/JackDaniells/pack-service/domain/service"
 	"log"
 	"os"
@@ -13,7 +14,8 @@ import (
 func main() {
 	log.Println("starting pack service application")
 
-	packService := service.NewPackService()
+	packRepository := repository.NewPackRepository()
+	packService := service.NewPackService(packRepository)
 	packHandler := handlers.NewPackHandler(packService)
 
 	apiPort := "8080"

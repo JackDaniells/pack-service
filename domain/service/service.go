@@ -1,38 +1,24 @@
 package service
 
-import "github.com/JackDaniells/pack-service/domain/entity"
+import (
+	"github.com/JackDaniells/pack-service/domain/contracts"
+	"github.com/JackDaniells/pack-service/domain/entity"
+)
 
 type packService struct {
+	repository contracts.PackRepository
 }
 
-func NewPackService() *packService {
-	return &packService{}
+func NewPackService(repository contracts.PackRepository) *packService {
+	return &packService{
+		repository: repository,
+	}
 }
 
-func (p *packService) Calculate(orderItems int) []entity.Pack {
-	var packSizes = []int{250, 500, 1000, 2000, 5000}
+func (p *packService) Calculate(items int) []entity.Pack {
+	var packs = p.repository.GetAll()
 
-	packsNeeded := make(map[int]int)
-
-	// fully divides items into packs
-	for i := len(packSizes) - 1; i >= 0; i-- {
-		pack := packSizes[i]
-		packsUsed := orderItems / pack
-		if packsUsed > 0 {
-			packsNeeded[pack] = packsUsed
-			orderItems %= pack
-		}
-	}
-
-	// Distribute remaining items across available pack sizes
-	for i := 0; i < len(packSizes) && orderItems > 0; i++ {
-		pack := packSizes[i]
-		// If the pack can accommodate the remaining items, use it
-		if orderItems <= pack {
-			packsNeeded[pack]++
-			orderItems = 0
-		}
-	}
+	packsNeeded := calculate(packs, items)
 
 	var response []entity.Pack
 	for key, value := range packsNeeded {
@@ -44,4 +30,30 @@ func (p *packService) Calculate(orderItems int) []entity.Pack {
 
 	return response
 
+}
+
+func calculate(packs []int, items int) map[int]int {
+	packsNeeded := make(map[int]int)
+
+	// fully divides items into packs
+	for i := len(packs) - 1; i >= 0; i-- {
+		pack := packs[i]
+		packsUsed := items / pack
+		if packsUsed > 0 {
+			packsNeeded[pack] = packsUsed
+			items %= pack
+		}
+	}
+
+	// Distribute remaining items across available pack sizes
+	for i := 0; i < len(packs) && items > 0; i++ {
+		pack := packs[i]
+		// If the pack can accommodate the remaining items, use it
+		if items <= pack {
+			packsNeeded[pack]++
+			items = 0
+		}
+	}
+
+	return packsNeeded
 }
