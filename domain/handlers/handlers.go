@@ -43,5 +43,4 @@ func (s *packHandler) Calculate(response http.ResponseWriter, request *http.Requ
 		http.Error(response, "error when write response", http.StatusInternalServerError)
 		return
 	}
-	response.WriteHeader(http.StatusOK)
 }

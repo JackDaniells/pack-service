@@ -1,5 +1,7 @@
 package service
 
+import "github.com/JackDaniells/pack-service/domain/entity"
+
 type packService struct {
 }
 
@@ -7,7 +9,7 @@ func NewPackService() *packService {
 	return &packService{}
 }
 
-func (p *packService) Calculate(orderItems int) map[int]int {
+func (p *packService) Calculate(orderItems int) []entity.Pack {
 	var packSizes = []int{250, 500, 1000, 2000, 5000}
 
 	packsNeeded := make(map[int]int)
@@ -32,6 +34,14 @@ func (p *packService) Calculate(orderItems int) map[int]int {
 		}
 	}
 
-	return packsNeeded
+	var response []entity.Pack
+	for key, value := range packsNeeded {
+		response = append(response, entity.Pack{
+			Size:     key,
+			Quantity: value,
+		})
+	}
+
+	return response
 
 }
