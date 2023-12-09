@@ -28,6 +28,16 @@ func (_m *PackService) Calculate(orderItems int) []entity.Pack {
 	return r0
 }
 
+// Create provides a mock function with given fields: pack
+func (_m *PackService) Create(pack int) {
+	_m.Called(pack)
+}
+
+// Remove provides a mock function with given fields: pack
+func (_m *PackService) Remove(pack int) {
+	_m.Called(pack)
+}
+
 // NewPackService creates a new instance of PackService. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewPackService(t interface {
