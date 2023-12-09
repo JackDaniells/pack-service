@@ -18,6 +18,16 @@ func (_m *PackHandler) Calculate(response http.ResponseWriter, request *http.Req
 	_m.Called(response, request)
 }
 
+// Create provides a mock function with given fields: response, request
+func (_m *PackHandler) Create(response http.ResponseWriter, request *http.Request) {
+	_m.Called(response, request)
+}
+
+// Remove provides a mock function with given fields: response, request
+func (_m *PackHandler) Remove(response http.ResponseWriter, request *http.Request) {
+	_m.Called(response, request)
+}
+
 // NewPackHandler creates a new instance of PackHandler. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewPackHandler(t interface {
