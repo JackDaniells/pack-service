@@ -17,7 +17,9 @@ type Server struct {
 
 func NewMuxRouter(packHandler contracts.PackHandler) *mux.Router {
 	r := mux.NewRouter()
-	r.HandleFunc("/pack/calculate", packHandler.Calculate).Methods(http.MethodGet)
+	r.HandleFunc("/calculate", packHandler.Calculate).Methods(http.MethodGet)
+	r.HandleFunc("/pack", packHandler.Create).Methods(http.MethodPost)
+	r.HandleFunc("/pack/{pack}", packHandler.Remove).Methods(http.MethodDelete)
 	return r
 }
 

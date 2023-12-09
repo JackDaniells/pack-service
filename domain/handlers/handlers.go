@@ -3,6 +3,8 @@ package handlers
 import (
 	"encoding/json"
 	"github.com/JackDaniells/pack-service/domain/contracts"
+	requestDomain "github.com/JackDaniells/pack-service/domain/handlers/request"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"strconv"
@@ -43,4 +45,32 @@ func (s *packHandler) Calculate(response http.ResponseWriter, request *http.Requ
 		http.Error(response, "error when write response", http.StatusInternalServerError)
 		return
 	}
+}
+
+func (s *packHandler) Create(response http.ResponseWriter, request *http.Request) {
+
+	var packRequest requestDomain.CreatePackRequest
+
+	err := json.NewDecoder(request.Body).Decode(&packRequest)
+	if err != nil {
+		log.Println("error when decode request body: ", err)
+		http.Error(response, "error when decode request body", http.StatusBadRequest)
+		return
+	}
+
+	s.packService.Create(packRequest.Size)
+	response.WriteHeader(http.StatusCreated)
+}
+
+func (s *packHandler) Remove(response http.ResponseWriter, request *http.Request) {
+	pack := mux.Vars(request)["pack"]
+
+	IntPack, err := strconv.Atoi(pack)
+	if err != nil {
+		log.Println("error when parse pack: ", err)
+		http.Error(response, "error when parse pack", http.StatusBadRequest)
+		return
+	}
+	s.packService.Remove(IntPack)
+	response.WriteHeader(http.StatusOK)
 }
