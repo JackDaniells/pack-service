@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/JackDaniells/pack-service/domain/entity"
 	"reflect"
 	"testing"
 )
@@ -12,15 +13,18 @@ func Test_packService_Calculate(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want map[int]int
+		want []entity.Pack
 	}{
 		{
 			name: "Should return 1 250-pack for 1 order item",
 			args: args{
 				orderItems: 1,
 			},
-			want: map[int]int{
-				250: 1,
+			want: []entity.Pack{
+				{
+					Size:     250,
+					Quantity: 1,
+				},
 			},
 		},
 		{
@@ -28,8 +32,11 @@ func Test_packService_Calculate(t *testing.T) {
 			args: args{
 				orderItems: 250,
 			},
-			want: map[int]int{
-				250: 1,
+			want: []entity.Pack{
+				{
+					Size:     250,
+					Quantity: 1,
+				},
 			},
 		},
 		{
@@ -37,9 +44,15 @@ func Test_packService_Calculate(t *testing.T) {
 			args: args{
 				orderItems: 501,
 			},
-			want: map[int]int{
-				250: 1,
-				500: 1,
+			want: []entity.Pack{
+				{
+					Size:     500,
+					Quantity: 1,
+				},
+				{
+					Size:     250,
+					Quantity: 1,
+				},
 			},
 		},
 		{
@@ -47,10 +60,19 @@ func Test_packService_Calculate(t *testing.T) {
 			args: args{
 				orderItems: 12001,
 			},
-			want: map[int]int{
-				250:  1,
-				2000: 1,
-				5000: 2,
+			want: []entity.Pack{
+				{
+					Size:     5000,
+					Quantity: 2,
+				},
+				{
+					Size:     2000,
+					Quantity: 1,
+				},
+				{
+					Size:     250,
+					Quantity: 1,
+				},
 			},
 		},
 	}
