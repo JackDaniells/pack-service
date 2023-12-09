@@ -15,6 +15,14 @@ func NewPackService(repository contracts.PackRepository) *packService {
 	}
 }
 
+func (p *packService) Create(pack int) {
+	p.repository.Create(pack)
+}
+
+func (p *packService) Remove(pack int) {
+	p.repository.Remove(pack)
+}
+
 func (p *packService) Calculate(items int) (response []entity.Pack) {
 	var packs = p.repository.GetAll()
 	if len(packs) == 0 {
