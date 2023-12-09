@@ -15,45 +15,62 @@ func NewPackService(repository contracts.PackRepository) *packService {
 	}
 }
 
-func (p *packService) Calculate(items int) []entity.Pack {
+func (p *packService) Calculate(items int) (response []entity.Pack) {
 	var packs = p.repository.GetAll()
+	if len(packs) == 0 {
+		return
+	}
 
-	packsNeeded := calculate(packs, items)
+	packsQty := calculatePacksQuantities(packs, items)
 
-	var response []entity.Pack
-	for key, value := range packsNeeded {
-		response = append(response, entity.Pack{
-			Size:     key,
-			Quantity: value,
-		})
+	for i, packQty := range packsQty {
+		if packQty > 0 {
+			response = append(response, entity.Pack{
+				Size:     packs[i],
+				Quantity: packQty,
+			})
+		}
 	}
 
 	return response
 
 }
 
-func calculate(packs []int, items int) map[int]int {
-	packsNeeded := make(map[int]int)
+func calculatePacksQuantities(packs []int, items int) []int {
 
-	// fully divides items into packs
-	for i := len(packs) - 1; i >= 0; i-- {
-		pack := packs[i]
-		packsUsed := items / pack
-		if packsUsed > 0 {
-			packsNeeded[pack] = packsUsed
+	t1, i := calcPrioritizingItemsDistribution(packs, items)
+	if i == 0 {
+		return t1
+	}
+
+	packsQty := calcPrioritizingPacksDistribution(packs, items)
+	return packsQty
+}
+
+func calcPrioritizingPacksDistribution(packs []int, items int) []int {
+	packsQty := make([]int, len(packs))
+	for i, pack := range packs {
+		if pack <= items {
+			packsQty[i] = items / pack
 			items %= pack
 		}
-	}
 
-	// Distribute remaining items across available pack sizes
-	for i := 0; i < len(packs) && items > 0; i++ {
-		pack := packs[i]
-		// If the pack can accommodate the remaining items, use it
-		if items <= pack {
-			packsNeeded[pack]++
+		// compare pack difference with the smallest pack
+		thisPackDiff := pack - items
+		if thisPackDiff < packs[len(packs)-1] {
+			packsQty[i]++
 			items = 0
+			break
 		}
 	}
+	return packsQty
+}
 
-	return packsNeeded
+func calcPrioritizingItemsDistribution(packs []int, items int) ([]int, int) {
+	packsQty := make([]int, len(packs))
+	for i, pack := range packs {
+		packsQty[i] = items / pack
+		items %= pack
+	}
+	return packsQty, items
 }
