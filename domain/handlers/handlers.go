@@ -29,7 +29,12 @@ func (s *packHandler) Calculate(response http.ResponseWriter, request *http.Requ
 		http.Error(response, "error when parse items", http.StatusBadRequest)
 		return
 	}
-	packs := s.packService.Calculate(intItems)
+	packs, err := s.packService.Calculate(intItems)
+	if err != nil {
+		log.Println("error when calculate pack items: ", err)
+		http.Error(response, "error when calculate pack items: "+err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	bytes, err := json.Marshal(packs)
 	if err != nil {
@@ -58,7 +63,13 @@ func (s *packHandler) Create(response http.ResponseWriter, request *http.Request
 		return
 	}
 
-	s.packService.Create(packRequest.Size)
+	err = s.packService.Create(packRequest.Size)
+	if err != nil {
+		log.Println("error when create pack: ", err)
+		http.Error(response, "error when create pack: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	response.WriteHeader(http.StatusCreated)
 }
 
@@ -71,6 +82,13 @@ func (s *packHandler) Remove(response http.ResponseWriter, request *http.Request
 		http.Error(response, "error when parse pack", http.StatusBadRequest)
 		return
 	}
-	s.packService.Remove(IntPack)
+
+	err = s.packService.Remove(IntPack)
+	if err != nil {
+		log.Println("error when remove pack: ", err)
+		http.Error(response, "error when remove pack: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	response.WriteHeader(http.StatusOK)
 }

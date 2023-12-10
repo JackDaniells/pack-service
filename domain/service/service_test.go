@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"github.com/JackDaniells/pack-service/domain/contracts"
 	"github.com/JackDaniells/pack-service/domain/contracts/mocks"
 	"github.com/JackDaniells/pack-service/domain/entity"
@@ -18,11 +19,19 @@ func Test_packService_Calculate(t *testing.T) {
 	}
 
 	tests := []struct {
-		name   string
-		args   args
-		fields fields
-		want   []entity.Pack
+		name    string
+		args    args
+		fields  fields
+		want    []entity.Pack
+		wantErr error
 	}{
+		{
+			name: "Should return error if items is invalid",
+			args: args{
+				items: 0,
+			},
+			wantErr: errors.New("invalid items size"),
+		},
 		{
 			name: "Should return 1 250-pack for 1 item",
 			args: args{
@@ -258,9 +267,101 @@ func Test_packService_Calculate(t *testing.T) {
 			p := &packService{
 				repository: tt.fields.packRepository,
 			}
-			got := p.Calculate(tt.args.items)
+			got, gotErr := p.Calculate(tt.args.items)
+			if gotErr != nil {
+				if !reflect.DeepEqual(gotErr, tt.wantErr) {
+					t.Errorf("Calculate() gotErr = %v, wantErr %v", gotErr, tt.wantErr)
+				}
+			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Calculate() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_packService_Create(t *testing.T) {
+	type fields struct {
+		repository contracts.PackRepository
+	}
+	type args struct {
+		pack int
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Should return error if pack size is invalid",
+			args: args{
+				pack: 0,
+			},
+			wantErr: true,
+		},
+		{
+			name: "Should return ok if pack was created with success",
+			args: args{
+				pack: 3,
+			},
+			fields: fields{
+				repository: func() contracts.PackRepository {
+					packService := &mocks.PackRepository{}
+					packService.On("Create", 3).Return()
+					return packService
+				}(),
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &packService{
+				repository: tt.fields.repository,
+			}
+			if err := p.Create(tt.args.pack); (err != nil) != tt.wantErr {
+				t.Errorf("Create() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func Test_packService_Remove(t *testing.T) {
+	type fields struct {
+		repository contracts.PackRepository
+	}
+	type args struct {
+		pack int
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Should return ok if pack was created with success",
+			args: args{
+				pack: 3,
+			},
+			fields: fields{
+				repository: func() contracts.PackRepository {
+					packService := &mocks.PackRepository{}
+					packService.On("Remove", 3).Return()
+					return packService
+				}(),
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &packService{
+				repository: tt.fields.repository,
+			}
+			if err := p.Remove(tt.args.pack); (err != nil) != tt.wantErr {
+				t.Errorf("Remove() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

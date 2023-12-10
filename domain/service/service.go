@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"github.com/JackDaniells/pack-service/domain/contracts"
 	"github.com/JackDaniells/pack-service/domain/entity"
 )
@@ -15,15 +16,25 @@ func NewPackService(repository contracts.PackRepository) *packService {
 	}
 }
 
-func (p *packService) Create(pack int) {
+func (p *packService) Create(pack int) error {
+	if pack <= 0 {
+		return errors.New("invalid pack size")
+	}
+
 	p.repository.Create(pack)
+	return nil
 }
 
-func (p *packService) Remove(pack int) {
+func (p *packService) Remove(pack int) error {
 	p.repository.Remove(pack)
+	return nil
 }
 
-func (p *packService) Calculate(items int) (response []entity.Pack) {
+func (p *packService) Calculate(items int) (response []entity.Pack, err error) {
+	if items <= 0 {
+		return nil, errors.New("invalid items size")
+	}
+
 	var packs = p.repository.GetAll()
 	if len(packs) == 0 {
 		return
@@ -40,7 +51,7 @@ func (p *packService) Calculate(items int) (response []entity.Pack) {
 		}
 	}
 
-	return response
+	return response, nil
 
 }
 

@@ -13,10 +13,14 @@ type PackService struct {
 }
 
 // Calculate provides a mock function with given fields: orderItems
-func (_m *PackService) Calculate(orderItems int) []entity.Pack {
+func (_m *PackService) Calculate(orderItems int) ([]entity.Pack, error) {
 	ret := _m.Called(orderItems)
 
 	var r0 []entity.Pack
+	var r1 error
+	if rf, ok := ret.Get(0).(func(int) ([]entity.Pack, error)); ok {
+		return rf(orderItems)
+	}
 	if rf, ok := ret.Get(0).(func(int) []entity.Pack); ok {
 		r0 = rf(orderItems)
 	} else {
@@ -25,17 +29,41 @@ func (_m *PackService) Calculate(orderItems int) []entity.Pack {
 		}
 	}
 
-	return r0
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(orderItems)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // Create provides a mock function with given fields: pack
-func (_m *PackService) Create(pack int) {
-	_m.Called(pack)
+func (_m *PackService) Create(pack int) error {
+	ret := _m.Called(pack)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(int) error); ok {
+		r0 = rf(pack)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 // Remove provides a mock function with given fields: pack
-func (_m *PackService) Remove(pack int) {
-	_m.Called(pack)
+func (_m *PackService) Remove(pack int) error {
+	ret := _m.Called(pack)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(int) error); ok {
+		r0 = rf(pack)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 // NewPackService creates a new instance of PackService. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
