@@ -85,8 +85,12 @@ To remove existing packages, use the DELETE endpoint below:
 curl --location --request DELETE 'localhost:8080/pack/5000'
 ```
 
+### Online Application
+
 
 To simplify validations, the application can be online accessed at:
 ``` curl
 curl --location 'http://3.15.189.102:8080/calculate?items=12001'
 ```
+
+
