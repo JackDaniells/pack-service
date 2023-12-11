@@ -23,6 +23,11 @@ func (_m *PackHandler) Create(response http.ResponseWriter, request *http.Reques
 	_m.Called(response, request)
 }
 
+// GetAll provides a mock function with given fields: response, request
+func (_m *PackHandler) GetAll(response http.ResponseWriter, request *http.Request) {
+	_m.Called(response, request)
+}
+
 // Remove provides a mock function with given fields: response, request
 func (_m *PackHandler) Remove(response http.ResponseWriter, request *http.Request) {
 	_m.Called(response, request)
