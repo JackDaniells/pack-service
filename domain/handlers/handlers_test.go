@@ -5,6 +5,7 @@ import (
 	"github.com/JackDaniells/pack-service/api"
 	"github.com/JackDaniells/pack-service/domain/contracts"
 	"github.com/JackDaniells/pack-service/domain/contracts/mocks"
+	"github.com/JackDaniells/pack-service/domain/entity"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -70,6 +71,55 @@ func Test_packHandler_Calculate(t *testing.T) {
 
 			router := api.NewMuxRouter(handler)
 			req, _ := http.NewRequest(http.MethodGet, "/calculate?items="+tt.args.items, nil)
+			res := httptest.NewRecorder()
+			router.ServeHTTP(res, req)
+
+			assert.Equal(t, tt.expectedCode, res.Code)
+		})
+	}
+}
+
+func Test_packHandler_GetAll(t *testing.T) {
+	type fields struct {
+		packService contracts.PackService
+	}
+	tests := []struct {
+		name         string
+		fields       fields
+		expectedCode int
+	}{
+		{
+			name: "should return 400 when getAll service return error",
+			fields: fields{
+				packService: func() contracts.PackService {
+					packService := &mocks.PackService{}
+					packService.On("GetAll").
+						Return(nil, errors.New("mock error"))
+					return packService
+				}(),
+			},
+			expectedCode: http.StatusBadRequest,
+		},
+		{
+			name: "should return 200 when calculate return ok",
+			fields: fields{
+				packService: func() contracts.PackService {
+					packService := &mocks.PackService{}
+					packService.On("GetAll").Return([]entity.Pack{}, nil)
+					return packService
+				}(),
+			},
+			expectedCode: http.StatusOK,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			handler := &packHandler{
+				packService: tt.fields.packService,
+			}
+
+			router := api.NewMuxRouter(handler)
+			req, _ := http.NewRequest(http.MethodGet, "/packs", nil)
 			res := httptest.NewRecorder()
 			router.ServeHTTP(res, req)
 

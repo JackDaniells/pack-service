@@ -52,6 +52,33 @@ func (s *packHandler) Calculate(response http.ResponseWriter, request *http.Requ
 	}
 }
 
+func (s *packHandler) GetAll(response http.ResponseWriter, request *http.Request) {
+
+	packs, err := s.packService.GetAll()
+	if err != nil {
+		log.Println("error when create pack: ", err)
+		http.Error(response, "error when create pack: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	bytes, err := json.Marshal(packs)
+	if err != nil {
+		log.Println("error when marshal response: ", err)
+		http.Error(response, "error when marshal response", http.StatusInternalServerError)
+		return
+	}
+
+	response.Header().Set("Content-Type", "application/json")
+	_, err = response.Write(bytes)
+	if err != nil {
+		log.Println("error when write response: ", err)
+		http.Error(response, "error when write response", http.StatusInternalServerError)
+		return
+	}
+
+	response.WriteHeader(http.StatusCreated)
+}
+
 func (s *packHandler) Create(response http.ResponseWriter, request *http.Request) {
 
 	var packRequest requestDomain.CreatePackRequest
