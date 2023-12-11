@@ -7,3 +7,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - '3000:3000'
+
+  client:
+    build:
+      context: vuejs-client
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    depends_on:
+      - server
