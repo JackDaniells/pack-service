@@ -280,6 +280,59 @@ func Test_packService_Calculate(t *testing.T) {
 	}
 }
 
+func Test_packService_GetAll(t *testing.T) {
+	type fields struct {
+		repository contracts.PackRepository
+	}
+	type args struct {
+		pack int
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		want    []entity.Pack
+		wantErr bool
+	}{
+		{
+			name: "Should return ok when getAll return data",
+			args: args{
+				pack: 3,
+			},
+			fields: fields{
+				repository: func() contracts.PackRepository {
+					packService := &mocks.PackRepository{}
+					packService.On("GetAll").Return([]int{1, 2, 3, 4, 5})
+					return packService
+				}(),
+			},
+			want: []entity.Pack{
+				{Size: 1},
+				{Size: 2},
+				{Size: 3},
+				{Size: 4},
+				{Size: 5},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &packService{
+				repository: tt.fields.repository,
+			}
+
+			got, err := p.GetAll()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Create() error = %v, wantErr %v", err, tt.wantErr)
+			}
+
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Calculate() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func Test_packService_Create(t *testing.T) {
 	type fields struct {
 		repository contracts.PackRepository

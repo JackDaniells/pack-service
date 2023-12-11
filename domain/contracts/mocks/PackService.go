@@ -52,6 +52,32 @@ func (_m *PackService) Create(pack int) error {
 	return r0
 }
 
+// GetAll provides a mock function with given fields:
+func (_m *PackService) GetAll() ([]entity.Pack, error) {
+	ret := _m.Called()
+
+	var r0 []entity.Pack
+	var r1 error
+	if rf, ok := ret.Get(0).(func() ([]entity.Pack, error)); ok {
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() []entity.Pack); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entity.Pack)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Remove provides a mock function with given fields: pack
 func (_m *PackService) Remove(pack int) error {
 	ret := _m.Called(pack)
