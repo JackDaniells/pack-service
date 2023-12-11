@@ -17,10 +17,30 @@ type Server struct {
 
 func NewMuxRouter(packHandler contracts.PackHandler) *mux.Router {
 	r := mux.NewRouter()
+	r.Use(publicEndpointMiddleware)
 	r.HandleFunc("/calculate", packHandler.Calculate).Methods(http.MethodGet)
-	r.HandleFunc("/pack", packHandler.Create).Methods(http.MethodPost)
-	r.HandleFunc("/pack/{pack}", packHandler.Remove).Methods(http.MethodDelete)
+	r.HandleFunc("/packs", packHandler.GetAll).Methods(http.MethodGet)
+	r.HandleFunc("/packs", packHandler.Create).Methods(http.MethodPost)
+	r.HandleFunc("/packs/{pack}", packHandler.Remove).Methods(http.MethodDelete)
+
+	r.HandleFunc("/packs", defaultOptionsHandler).Methods(http.MethodOptions)
+	r.HandleFunc("/packs/{pack}", defaultOptionsHandler).Methods(http.MethodOptions)
 	return r
+}
+
+func publicEndpointMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		//Allow CORS here By * or specific origin
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+func defaultOptionsHandler(response http.ResponseWriter, request *http.Request) {
+	response.WriteHeader(http.StatusOK)
 }
 
 func NewServer(apiPort string, portHandler contracts.PackHandler) *Server {
