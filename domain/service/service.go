@@ -25,6 +25,15 @@ func (p *packService) Create(pack int) error {
 	return nil
 }
 
+func (p *packService) GetAll() ([]entity.Pack, error) {
+
+	var response []entity.Pack
+	for _, pack := range p.repository.GetAll() {
+		response = append(response, entity.Pack{Size: pack})
+	}
+	return response, nil
+}
+
 func (p *packService) Remove(pack int) error {
 	p.repository.Remove(pack)
 	return nil
