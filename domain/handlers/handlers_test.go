@@ -192,7 +192,7 @@ func Test_packHandler_Create(t *testing.T) {
 			}
 
 			router := api.NewMuxRouter(handler)
-			req, _ := http.NewRequest(http.MethodPost, "/pack", strings.NewReader(tt.args.request))
+			req, _ := http.NewRequest(http.MethodPost, "/packs", strings.NewReader(tt.args.request))
 			res := httptest.NewRecorder()
 			router.ServeHTTP(res, req)
 
@@ -257,7 +257,7 @@ func Test_packHandler_Remove(t *testing.T) {
 			}
 
 			router := api.NewMuxRouter(handler)
-			req, _ := http.NewRequest(http.MethodDelete, "/pack/"+tt.args.pack, nil)
+			req, _ := http.NewRequest(http.MethodDelete, "/packs/"+tt.args.pack, nil)
 			res := httptest.NewRecorder()
 			router.ServeHTTP(res, req)
 

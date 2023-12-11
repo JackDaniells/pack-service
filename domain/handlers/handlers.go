@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"github.com/JackDaniells/pack-service/domain/contracts"
-	requestDomain "github.com/JackDaniells/pack-service/domain/handlers/request"
+	"github.com/JackDaniells/pack-service/domain/entity"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -81,7 +81,7 @@ func (s *packHandler) GetAll(response http.ResponseWriter, request *http.Request
 
 func (s *packHandler) Create(response http.ResponseWriter, request *http.Request) {
 
-	var packRequest requestDomain.CreatePackRequest
+	var packRequest entity.Pack
 
 	err := json.NewDecoder(request.Body).Decode(&packRequest)
 	if err != nil {
