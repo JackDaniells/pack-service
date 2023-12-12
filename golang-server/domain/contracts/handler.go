@@ -11,4 +11,5 @@ type PackHandler interface {
 	Remove(response http.ResponseWriter, request *http.Request)
 	AddList(response http.ResponseWriter, request *http.Request)
 	RemoveList(response http.ResponseWriter, request *http.Request)
+	UpdateList(response http.ResponseWriter, request *http.Request)
 }

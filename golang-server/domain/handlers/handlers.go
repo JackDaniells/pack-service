@@ -160,3 +160,23 @@ func (s *packHandler) RemoveList(response http.ResponseWriter, request *http.Req
 
 	response.WriteHeader(http.StatusOK)
 }
+
+func (s *packHandler) UpdateList(response http.ResponseWriter, request *http.Request) {
+	var packRequest []int
+
+	err := json.NewDecoder(request.Body).Decode(&packRequest)
+	if err != nil {
+		log.Println("error when decode request body: ", err)
+		http.Error(response, "error when decode request body", http.StatusBadRequest)
+		return
+	}
+
+	err = s.packService.UpdateList(packRequest)
+	if err != nil {
+		log.Println("error when remove pack: ", err)
+		http.Error(response, "error when remove pack: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	response.WriteHeader(http.StatusOK)
+}
