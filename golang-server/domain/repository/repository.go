@@ -38,3 +38,24 @@ func (p *packRepository) Remove(packToRemove int) {
 	}
 	p.packs = packs
 }
+
+func (p *packRepository) AddList(packsToAdd []int) {
+	for _, pack := range packsToAdd {
+		if !slices.Contains(p.packs, pack) {
+			p.packs = append(p.packs, pack)
+		}
+	}
+}
+
+func (p *packRepository) RemoveList(packsToRemove []int) {
+
+	for _, packToRemove := range packsToRemove {
+		for i, pack := range p.packs {
+			if pack == packToRemove {
+				p.packs[i] = p.packs[len(p.packs)-1]
+				p.packs = p.packs[:len(p.packs)-1]
+				break
+			}
+		}
+	}
+}
