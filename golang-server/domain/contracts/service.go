@@ -11,4 +11,5 @@ type PackService interface {
 	Remove(pack int) error
 	Addlist(packs []int) error
 	RemoveList(packs []int) error
+	UpdateList(packs []int) error
 }

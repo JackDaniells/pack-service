@@ -48,6 +48,11 @@ func (p *packService) RemoveList(packs []int) error {
 	return nil
 }
 
+func (p *packService) UpdateList(packs []int) error {
+	p.repository.UpdateList(packs)
+	return nil
+}
+
 func (p *packService) Calculate(items int) (response []entity.Pack, err error) {
 	if items <= 0 {
 		return nil, errors.New("invalid items size")

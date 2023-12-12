@@ -120,6 +120,20 @@ func (_m *PackService) RemoveList(packs []int) error {
 	return r0
 }
 
+// UpdateList provides a mock function with given fields: packs
+func (_m *PackService) UpdateList(packs []int) error {
+	ret := _m.Called(packs)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func([]int) error); ok {
+		r0 = rf(packs)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // NewPackService creates a new instance of PackService. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewPackService(t interface {
