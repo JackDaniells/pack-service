@@ -6,4 +6,5 @@ type PackRepository interface {
 	Remove(packToRemove int)
 	AddList(packsToAdd []int)
 	RemoveList(packsToRemove []int)
+	UpdateList(packs []int)
 }

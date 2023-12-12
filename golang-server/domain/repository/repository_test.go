@@ -207,3 +207,39 @@ func Test_packRepository_RemoveList(t *testing.T) {
 		})
 	}
 }
+
+func Test_packRepository_UpdateList(t *testing.T) {
+	type fields struct {
+		packs []int
+	}
+	type args struct {
+		packs []int
+	}
+	tests := []struct {
+		name     string
+		fields   fields
+		args     args
+		wantList []int
+	}{
+		{
+			name: "Should replace the current list of packs with the sent list",
+			fields: fields{
+				packs: []int{1, 2, 3, 4, 5, 6},
+			},
+			args: args{
+				packs: []int{3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+			},
+			wantList: []int{3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &packRepository{
+				packs: tt.fields.packs,
+			}
+			p.UpdateList(tt.args.packs)
+
+			assert.Equal(t, tt.wantList, p.packs)
+		})
+	}
+}

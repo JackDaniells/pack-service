@@ -45,6 +45,11 @@ func (_m *PackRepository) RemoveList(packsToRemove []int) {
 	_m.Called(packsToRemove)
 }
 
+// UpdateList provides a mock function with given fields: packs
+func (_m *PackRepository) UpdateList(packs []int) {
+	_m.Called(packs)
+}
+
 // NewPackRepository creates a new instance of PackRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewPackRepository(t interface {

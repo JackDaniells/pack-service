@@ -47,6 +47,10 @@ func (p *packRepository) AddList(packsToAdd []int) {
 	}
 }
 
+func (p *packRepository) UpdateList(packs []int) {
+	p.packs = packs
+}
+
 func (p *packRepository) RemoveList(packsToRemove []int) {
 
 	for _, packToRemove := range packsToRemove {
