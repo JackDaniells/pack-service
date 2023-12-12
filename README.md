@@ -37,19 +37,22 @@ To execute the application, run:
 make run
 ```
 
-If everything goes well, the API Rest server will run on port `8080`.
-
 And to stop the application, use:
 ```shell
 make stop
 ```
 
-### Usage
+# Usage
 
+If everything goes well:
+- the frontend will run on port `8080`
+- the API Rest server will run on port `3000`
+
+### Endpoints
 
 To calculate the number of packages, use the following GET endpoint:
 ``` curl
-curl --location 'localhost:8080/calculate?items=12001'
+curl --location 'localhost:3000/calculate?items=12001'
 ```
 The API will return a JSON in the following format, showing the size of the packages used and the quantity:
 ``` json
@@ -69,10 +72,28 @@ The API will return a JSON in the following format, showing the size of the pack
 ]
 ```
 
+To get all pack list, use the following GET endpoint:
+``` curl
+curl --location 'localhost:3000/packs'
+```
+The API will return a JSON in the following format, showing the size of the packages used and the quantity:
+``` json
+[
+    {
+        "size": 250
+    },
+    {
+        "size": 2000
+    },
+    {
+        "size": 5000
+    }
+]
+```
 
 To add new packages, use the POST endpoint below:
 ``` curl
-curl --location 'localhost:8080/pack' \
+curl --location 'localhost:3000/packs' \
 --header 'Content-Type: application/json' \
 --data '{
     "size": 1
@@ -82,15 +103,12 @@ curl --location 'localhost:8080/pack' \
 To remove existing packages, use the DELETE endpoint below:
 
 ``` curl
-curl --location --request DELETE 'localhost:8080/pack/5000'
+curl --location --request DELETE 'localhost:3000/packs/5000'
 ```
 
 ### Online Application
 
 
-To simplify validations, the application can be online accessed at:
-``` curl
-curl --location 'http://3.15.189.102:8080/calculate?items=12001'
-```
+To simplify validations, the application can be online accessed at [http://3.15.189.102:8080](http://3.15.189.102:8080)
 
 

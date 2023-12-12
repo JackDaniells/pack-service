@@ -18,7 +18,7 @@ func main() {
 	packService := service.NewPackService(packRepository)
 	packHandler := handlers.NewPackHandler(packService)
 
-	apiPort := "8080"
+	apiPort := "3000"
 	server := api.NewServer(apiPort, packHandler)
 
 	// Serve api routes
