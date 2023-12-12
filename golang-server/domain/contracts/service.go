@@ -9,4 +9,6 @@ type PackService interface {
 	GetAll() ([]entity.Pack, error)
 	Create(pack int) error
 	Remove(pack int) error
+	Addlist(packs []int) error
+	RemoveList(packs []int) error
 }
