@@ -265,3 +265,210 @@ func Test_packHandler_Remove(t *testing.T) {
 		})
 	}
 }
+
+func Test_packHandler_AddList(t *testing.T) {
+	type fields struct {
+		packService contracts.PackService
+	}
+	type args struct {
+		request string
+	}
+	tests := []struct {
+		name         string
+		fields       fields
+		args         args
+		expectedCode int
+	}{
+		{
+			name: "should return 400 when parse request fails",
+			args: args{
+				request: "mock error",
+			},
+			expectedCode: http.StatusBadRequest,
+		},
+		{
+			name: "should return 400 when create service return error",
+			fields: fields{
+				packService: func() contracts.PackService {
+					packService := &mocks.PackService{}
+					packService.On("Addlist", []int{1, 2, 3, 4, 5, 6}).Return(errors.New("mock error"))
+					return packService
+				}(),
+			},
+			args: args{
+				request: `
+					[1,2,3,4,5,6]
+				`,
+			},
+			expectedCode: http.StatusBadRequest,
+		},
+		{
+			name: "should return 201 when create return ok",
+			fields: fields{
+				packService: func() contracts.PackService {
+					packService := &mocks.PackService{}
+					packService.On("Addlist", []int{1, 2, 3, 4, 5, 6}).Return(nil)
+					return packService
+				}(),
+			},
+			args: args{
+				request: `
+					[1,2,3,4,5,6]
+				`,
+			},
+			expectedCode: http.StatusCreated,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			handler := &packHandler{
+				packService: tt.fields.packService,
+			}
+
+			router := api.NewMuxRouter(handler)
+			req, _ := http.NewRequest(http.MethodPost, "/packs/list", strings.NewReader(tt.args.request))
+			res := httptest.NewRecorder()
+			router.ServeHTTP(res, req)
+
+			assert.Equal(t, tt.expectedCode, res.Code)
+		})
+	}
+}
+
+func Test_packHandler_RemoveList(t *testing.T) {
+	type fields struct {
+		packService contracts.PackService
+	}
+	type args struct {
+		request string
+	}
+	tests := []struct {
+		name         string
+		fields       fields
+		args         args
+		expectedCode int
+	}{
+		{
+			name: "should return 400 when parse request fails",
+			args: args{
+				request: "mock error",
+			},
+			expectedCode: http.StatusBadRequest,
+		},
+		{
+			name: "should return 400 when create service return error",
+			fields: fields{
+				packService: func() contracts.PackService {
+					packService := &mocks.PackService{}
+					packService.On("RemoveList", []int{1, 2, 3, 4, 5, 6}).Return(errors.New("mock error"))
+					return packService
+				}(),
+			},
+			args: args{
+				request: `
+					[1,2,3,4,5,6]
+				`,
+			},
+			expectedCode: http.StatusBadRequest,
+		},
+		{
+			name: "should return 200 when create return ok",
+			fields: fields{
+				packService: func() contracts.PackService {
+					packService := &mocks.PackService{}
+					packService.On("RemoveList", []int{1, 2, 3, 4, 5, 6}).Return(nil)
+					return packService
+				}(),
+			},
+			args: args{
+				request: `
+					[1,2,3,4,5,6]
+				`,
+			},
+			expectedCode: http.StatusOK,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			handler := &packHandler{
+				packService: tt.fields.packService,
+			}
+
+			router := api.NewMuxRouter(handler)
+			req, _ := http.NewRequest(http.MethodPost, "/packs/list/remove", strings.NewReader(tt.args.request))
+			res := httptest.NewRecorder()
+			router.ServeHTTP(res, req)
+
+			assert.Equal(t, tt.expectedCode, res.Code)
+		})
+	}
+}
+
+func Test_packHandler_UpdateList(t *testing.T) {
+	type fields struct {
+		packService contracts.PackService
+	}
+	type args struct {
+		request string
+	}
+	tests := []struct {
+		name         string
+		fields       fields
+		args         args
+		expectedCode int
+	}{
+		{
+			name: "should return 400 when parse request fails",
+			args: args{
+				request: "mock error",
+			},
+			expectedCode: http.StatusBadRequest,
+		},
+		{
+			name: "should return 400 when create service return error",
+			fields: fields{
+				packService: func() contracts.PackService {
+					packService := &mocks.PackService{}
+					packService.On("UpdateList", []int{1, 2, 3, 4, 5, 6}).Return(errors.New("mock error"))
+					return packService
+				}(),
+			},
+			args: args{
+				request: `
+					[1,2,3,4,5,6]
+				`,
+			},
+			expectedCode: http.StatusBadRequest,
+		},
+		{
+			name: "should return 200 when create return ok",
+			fields: fields{
+				packService: func() contracts.PackService {
+					packService := &mocks.PackService{}
+					packService.On("UpdateList", []int{1, 2, 3, 4, 5, 6}).Return(nil)
+					return packService
+				}(),
+			},
+			args: args{
+				request: `
+					[1,2,3,4,5,6]
+				`,
+			},
+			expectedCode: http.StatusOK,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			handler := &packHandler{
+				packService: tt.fields.packService,
+			}
+
+			router := api.NewMuxRouter(handler)
+			req, _ := http.NewRequest(http.MethodPut, "/packs/list", strings.NewReader(tt.args.request))
+			res := httptest.NewRecorder()
+			router.ServeHTTP(res, req)
+
+			assert.Equal(t, tt.expectedCode, res.Code)
+		})
+	}
+}

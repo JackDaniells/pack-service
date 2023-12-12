@@ -13,6 +13,11 @@ type PackHandler struct {
 	mock.Mock
 }
 
+// AddList provides a mock function with given fields: response, request
+func (_m *PackHandler) AddList(response http.ResponseWriter, request *http.Request) {
+	_m.Called(response, request)
+}
+
 // Calculate provides a mock function with given fields: response, request
 func (_m *PackHandler) Calculate(response http.ResponseWriter, request *http.Request) {
 	_m.Called(response, request)
@@ -30,6 +35,11 @@ func (_m *PackHandler) GetAll(response http.ResponseWriter, request *http.Reques
 
 // Remove provides a mock function with given fields: response, request
 func (_m *PackHandler) Remove(response http.ResponseWriter, request *http.Request) {
+	_m.Called(response, request)
+}
+
+// RemoveList provides a mock function with given fields: response, request
+func (_m *PackHandler) RemoveList(response http.ResponseWriter, request *http.Request) {
 	_m.Called(response, request)
 }
 

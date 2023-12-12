@@ -125,3 +125,121 @@ func Test_packRepository_Remove(t *testing.T) {
 		})
 	}
 }
+
+func Test_packRepository_AddList(t *testing.T) {
+	type fields struct {
+		packs []int
+	}
+	type args struct {
+		packsToAdd []int
+	}
+	tests := []struct {
+		name     string
+		fields   fields
+		args     args
+		wantList []int
+	}{
+		{
+			name: "Should add all non-duplicate items to the pack list",
+			fields: fields{
+				packs: []int{1, 2, 3, 4},
+			},
+			args: args{
+				packsToAdd: []int{3, 4, 5, 6, 7, 8},
+			},
+			wantList: []int{1, 2, 3, 4, 5, 6, 7, 8},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &packRepository{
+				packs: tt.fields.packs,
+			}
+			p.AddList(tt.args.packsToAdd)
+
+			assert.Equal(t, tt.wantList, p.packs)
+		})
+	}
+}
+
+func Test_packRepository_RemoveList(t *testing.T) {
+	type fields struct {
+		packs []int
+	}
+	type args struct {
+		packsToRemove []int
+	}
+	tests := []struct {
+		name     string
+		fields   fields
+		args     args
+		wantList []int
+	}{
+		{
+			name: "Should remove all sent items to the pack list",
+			fields: fields{
+				packs: []int{1, 2, 3, 4, 5, 6},
+			},
+			args: args{
+				packsToRemove: []int{3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+			},
+			wantList: []int{1, 2},
+		},
+		{
+			name: "Should not remove items if no item from the sent list is found in the pack array",
+			fields: fields{
+				packs: []int{1, 2, 3, 4},
+			},
+			args: args{
+				packsToRemove: []int{5, 6, 7, 8, 9, 10},
+			},
+			wantList: []int{1, 2, 3, 4},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &packRepository{
+				packs: tt.fields.packs,
+			}
+			p.RemoveList(tt.args.packsToRemove)
+
+			assert.Equal(t, tt.wantList, p.packs)
+		})
+	}
+}
+
+func Test_packRepository_UpdateList(t *testing.T) {
+	type fields struct {
+		packs []int
+	}
+	type args struct {
+		packs []int
+	}
+	tests := []struct {
+		name     string
+		fields   fields
+		args     args
+		wantList []int
+	}{
+		{
+			name: "Should replace the current list of packs with the sent list",
+			fields: fields{
+				packs: []int{1, 2, 3, 4, 5, 6},
+			},
+			args: args{
+				packs: []int{3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+			},
+			wantList: []int{3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &packRepository{
+				packs: tt.fields.packs,
+			}
+			p.UpdateList(tt.args.packs)
+
+			assert.Equal(t, tt.wantList, p.packs)
+		})
+	}
+}

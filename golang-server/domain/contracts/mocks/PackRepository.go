@@ -9,6 +9,11 @@ type PackRepository struct {
 	mock.Mock
 }
 
+// AddList provides a mock function with given fields: packsToAdd
+func (_m *PackRepository) AddList(packsToAdd []int) {
+	_m.Called(packsToAdd)
+}
+
 // Create provides a mock function with given fields: pack
 func (_m *PackRepository) Create(pack int) {
 	_m.Called(pack)
@@ -33,6 +38,16 @@ func (_m *PackRepository) GetAll() []int {
 // Remove provides a mock function with given fields: packToRemove
 func (_m *PackRepository) Remove(packToRemove int) {
 	_m.Called(packToRemove)
+}
+
+// RemoveList provides a mock function with given fields: packsToRemove
+func (_m *PackRepository) RemoveList(packsToRemove []int) {
+	_m.Called(packsToRemove)
+}
+
+// UpdateList provides a mock function with given fields: packs
+func (_m *PackRepository) UpdateList(packs []int) {
+	_m.Called(packs)
 }
 
 // NewPackRepository creates a new instance of PackRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.

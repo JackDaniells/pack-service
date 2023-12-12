@@ -26,7 +26,6 @@ func (p *packService) Create(pack int) error {
 }
 
 func (p *packService) GetAll() ([]entity.Pack, error) {
-
 	var response []entity.Pack
 	for _, pack := range p.repository.GetAll() {
 		response = append(response, entity.Pack{Size: pack})
@@ -36,6 +35,21 @@ func (p *packService) GetAll() ([]entity.Pack, error) {
 
 func (p *packService) Remove(pack int) error {
 	p.repository.Remove(pack)
+	return nil
+}
+
+func (p *packService) Addlist(packs []int) error {
+	p.repository.AddList(packs)
+	return nil
+}
+
+func (p *packService) RemoveList(packs []int) error {
+	p.repository.RemoveList(packs)
+	return nil
+}
+
+func (p *packService) UpdateList(packs []int) error {
+	p.repository.UpdateList(packs)
 	return nil
 }
 
@@ -65,18 +79,20 @@ func (p *packService) Calculate(items int) (response []entity.Pack, err error) {
 }
 
 func calculatePacksQuantities(packs []int, items int) []int {
-
+	// try to calculate by finding the perfect distribution of items in packs
 	t1, i := calcPrioritizingItemsDistribution(packs, items)
 	if i == 0 {
 		return t1
 	}
 
+	// if the perfect distribution doesn't exist, try to calculate it by prioritizing the use of the smallest number of packs
 	packsQty := calcPrioritizingPacksDistribution(packs, items)
 	return packsQty
 }
 
 func calcPrioritizingPacksDistribution(packs []int, items int) []int {
 	packsQty := make([]int, len(packs))
+	// calc the number of packages that can be used to store items
 	for i, pack := range packs {
 		if pack <= items {
 			packsQty[i] = items / pack
@@ -85,6 +101,7 @@ func calcPrioritizingPacksDistribution(packs []int, items int) []int {
 
 		// compare pack difference with the smallest pack
 		thisPackDiff := pack - items
+		// if the difference is smaller, put it in the current package
 		if thisPackDiff < packs[len(packs)-1] {
 			packsQty[i]++
 			items = 0
@@ -96,6 +113,7 @@ func calcPrioritizingPacksDistribution(packs []int, items int) []int {
 
 func calcPrioritizingItemsDistribution(packs []int, items int) ([]int, int) {
 	packsQty := make([]int, len(packs))
+	// calc the number of packages that can be used to store items
 	for i, pack := range packs {
 		packsQty[i] = items / pack
 		items %= pack

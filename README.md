@@ -37,6 +37,10 @@ To execute the application, run:
 make run
 ```
 
+If everything goes well:
+- the frontend will run on port `8080`
+- the API Rest server will run on port `3000`
+
 And to stop the application, use:
 ```shell
 make stop
@@ -44,15 +48,15 @@ make stop
 
 # Usage
 
-If everything goes well:
-- the frontend will run on port `8080`
-- the API Rest server will run on port `3000`
+The frontend of the application can be online accessed at [http://3.15.189.102:8080](http://3.15.189.102:8080)
+The endpoints can be accessed at [http://3.15.189.102:3000](http://3.15.189.102:3000)
+
 
 ### Endpoints
 
 To calculate the number of packages, use the following GET endpoint:
 ``` curl
-curl --location 'localhost:3000/calculate?items=12001'
+curl --location '3.15.189.102:3000/calculate?items=12001'
 ```
 The API will return a JSON in the following format, showing the size of the packages used and the quantity:
 ``` json
@@ -74,7 +78,7 @@ The API will return a JSON in the following format, showing the size of the pack
 
 To get all pack list, use the following GET endpoint:
 ``` curl
-curl --location 'localhost:3000/packs'
+curl --location '3.15.189.102:3000/packs'
 ```
 The API will return a JSON in the following format, showing the size of the packages used and the quantity:
 ``` json
@@ -91,24 +95,38 @@ The API will return a JSON in the following format, showing the size of the pack
 ]
 ```
 
-To add new packages, use the POST endpoint below:
+To add new packs, use the POST endpoint below:
 ``` curl
-curl --location 'localhost:3000/packs' \
+curl --location '3.15.189.102:3000/packs' \
 --header 'Content-Type: application/json' \
 --data '{
     "size": 1
 }'
 ```
 
-To remove existing packages, use the DELETE endpoint below:
+To remove existing packs, use the DELETE endpoint below:
 
 ``` curl
-curl --location --request DELETE 'localhost:3000/packs/5000'
+curl --location --request DELETE '3.15.189.102:3000/packs/5000'
 ```
 
-### Online Application
+To add a list of new packs, use the POST endpoint below:
+``` curl
+curl --location 'http://3.15.189.102:3000/packs/list' \
+--header 'Content-Type: application/json' \
+--data '[1, 2, 3]'
+```
 
+To remove a list of new packs, use the POST endpoint below:
+``` curl
+curl --location 'http://3.15.189.102:3000/packs/list/remove' \
+--header 'Content-Type: application/json' \
+--data '[1, 2, 3]'
+```
 
-To simplify validations, the application can be online accessed at [http://3.15.189.102:8080](http://3.15.189.102:8080)
-
-
+To update the pack list by the sent list, use the PUT endpoint below:
+``` curl
+curl --location --request PUT 'http://3.15.189.102:3000/packs/list' \
+--header 'Content-Type: application/json' \
+--data '[1, 2, 3]'
+```
