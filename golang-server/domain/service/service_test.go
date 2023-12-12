@@ -419,3 +419,83 @@ func Test_packService_Remove(t *testing.T) {
 		})
 	}
 }
+
+func Test_packService_Addlist(t *testing.T) {
+	type fields struct {
+		repository contracts.PackRepository
+	}
+	type args struct {
+		packs []int
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Should return add packs to list in repository",
+			fields: fields{
+				repository: func() contracts.PackRepository {
+					packService := &mocks.PackRepository{}
+					packService.On("AddList", []int{1, 2, 3, 4}).Return()
+					return packService
+				}(),
+			},
+			args: args{
+				packs: []int{1, 2, 3, 4},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &packService{
+				repository: tt.fields.repository,
+			}
+			if err := p.Addlist(tt.args.packs); (err != nil) != tt.wantErr {
+				t.Errorf("Addlist() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func Test_packService_RemoveList(t *testing.T) {
+	type fields struct {
+		repository contracts.PackRepository
+	}
+	type args struct {
+		packs []int
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Should return remove packs to list in repository",
+			fields: fields{
+				repository: func() contracts.PackRepository {
+					packService := &mocks.PackRepository{}
+					packService.On("RemoveList", []int{1, 2, 3, 4}).Return()
+					return packService
+				}(),
+			},
+			args: args{
+				packs: []int{1, 2, 3, 4},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &packService{
+				repository: tt.fields.repository,
+			}
+			if err := p.RemoveList(tt.args.packs); (err != nil) != tt.wantErr {
+				t.Errorf("RemoveList() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
