@@ -22,9 +22,12 @@ func NewMuxRouter(packHandler contracts.PackHandler) *mux.Router {
 	r.HandleFunc("/packs", packHandler.GetAll).Methods(http.MethodGet)
 	r.HandleFunc("/packs", packHandler.Create).Methods(http.MethodPost)
 	r.HandleFunc("/packs/{pack}", packHandler.Remove).Methods(http.MethodDelete)
+	r.HandleFunc("/packs/list", packHandler.AddList).Methods(http.MethodPost)
+	r.HandleFunc("/packs/list/remove", packHandler.RemoveList).Methods(http.MethodPost)
 
 	r.HandleFunc("/packs", defaultOptionsHandler).Methods(http.MethodOptions)
 	r.HandleFunc("/packs/{pack}", defaultOptionsHandler).Methods(http.MethodOptions)
+	r.HandleFunc("/packs/list", defaultOptionsHandler).Methods(http.MethodOptions)
 	return r
 }
 
